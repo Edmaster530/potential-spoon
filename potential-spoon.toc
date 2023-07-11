@@ -1,0 +1,13 @@
+## Interface: 
+## Version: 1.0.0
+## Title: 69 Suffering - Refreshed
+## Author: Edmaster530
+## Notes: Changes your font to something...nice (but still family friendly)
+## DefaultState: Enabled
+## SavedVariables: PSDB
+## X-Category: Combat
+## X-License: MIT
+## X-Curse-Project-ID: TODO
+
+embdeds.xml
+potential-spoon.lua
