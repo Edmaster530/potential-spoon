@@ -9,6 +9,6 @@
 ## X-License: MIT
 ## X-Curse-Project-ID: 893760
 
-embdeds.xml
+embeds.xml
 variables.lua
 potential-spoon.lua
