@@ -4,10 +4,11 @@
 ## Author: Edmaster530
 ## Notes: Changes your font to something...nice (but still family friendly)
 ## DefaultState: Enabled
-## SavedVariables: PSDB
+## SavedVariables: PotentialSpoonDB
 ## X-Category: Combat
 ## X-License: MIT
-## X-Curse-Project-ID: TODO
+## X-Curse-Project-ID: 893760
 
 embdeds.xml
+variables.lua
 potential-spoon.lua
