@@ -24,6 +24,10 @@ function PotentialSpoonAddon:GetOptions(_, _, name)
                 set = function(_, value)
                     PotentialSpoonAddon.db.global.damage_font = value;
                     DAMAGE_TEXT_FONT = data.FontDictionary[value];
+                    STANDARD_TEXT_FONT = data.FontDictionary[value];
+                    NAMEPLATE_SPELLCAST_FONT = data.FontDictionary[value];
+                    UNIT_NAME_FONT = data.FontDictionary[value];
+                    CombatTextFont = data.FontDictionary[value];
                 end,
                 get = function(_)
                     return PotentialSpoonAddon.db.global.damage_font;
@@ -42,4 +46,8 @@ function PotentialSpoonAddon:OnInitialize()
     data.Dialog = AceConfigDialog:AddToBlizOptions(data.MetaData.Name, data.MetaData.Name);
     -- setting the damage text font from the options configured
     DAMAGE_TEXT_FONT = data.FontDictionary[self.db.global.damage_font];
+    STANDARD_TEXT_FONT = data.FontDictionary[self.db.global.damage_font];
+    NAMEPLATE_SPELLCAST_FONT = data.FontDictionary[self.db.global.damage_font];
+    UNIT_NAME_FONT = data.FontDictionary[self.db.global.damage_font];
+    CombatTextFont = data.FontDictionary[self.db.global.damage_font];
 end

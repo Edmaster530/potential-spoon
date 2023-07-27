@@ -16,6 +16,34 @@ data.DefaultOptions = {
     },
 };
 
+-- Testing to check for local global variables that might be available
+local AceGUI = LibStub("AceGUI-3.0");
+local scrollcontainer = AceGUI:Create("SimpleGroup");
+scrollcontainer:SetFullWidth(true);
+scrollcontainer:SetLayout("Fill");
+-- Create a container frame
+local f = AceGUI:Create("Frame")
+f:SetCallback("OnClose",function(widget) AceGUI:Release(widget) end)
+f:SetTitle("AceGUI-3.0 Example")
+f:SetLayout("Flow")
+f:AddChild(scrollcontainer);
+
+local scroll = AceGUI:Create("ScrollFrame");
+scroll:SetLayout("Flow");
+scrollcontainer:AddChild(scroll);
+
+local str = "";
+for k,v in pairs(_G) do
+    if string.find(k, "FONT") and not string.find(k, "COLOR") then
+        str = str .. "\n" .. k;
+    end
+end
+
+local edit = AceGUI:Create("MultiLineEditBox");
+edit:SetText(str);
+edit:SetLabel("Global Variables");
+f:AddChild(edit);
+
 data.Dialog = {};
 data.FontDictionary = {};
 data.FontDictionary[1] = "Interface\\Addons\\" .. data.Directory .. "\\Fonts\\pepsi.ttf";
