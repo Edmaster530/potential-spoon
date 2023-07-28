@@ -3,6 +3,13 @@ PotentialSpoonAddon = LibStub("AceAddon-3.0"):NewAddon(data.Directory);
 local AceConfigRegistry = LibStub("AceConfigRegistry-3.0");
 local AceConfigDialog = LibStub("AceConfigDialog-3.0");
 
+function PotentialSpoonAddon:SetupFont(value)
+    -- setting the damage text font from the options configured
+    DAMAGE_TEXT_FONT = data.FontDictionary[PotentialSpoonAddon.db.global.damage_font];
+    CombatTextFont:SetFont(DAMAGE_TEXT_FONT, COMBAT_TEXT_HEIGHT, "OUTLINE");
+    -- message("Game CLIENT Restart required in order for Font Changes to take affect!");
+end
+
 --[[
     UI Types are "cmd" "dropdown" "dialog" (ignored)
     UI Name field is expected to contain the full name of the calling addon, including version (ignored)
@@ -23,11 +30,7 @@ function PotentialSpoonAddon:GetOptions(_, _, name)
                 values = data.FontLookup,
                 set = function(_, value)
                     PotentialSpoonAddon.db.global.damage_font = value;
-                    DAMAGE_TEXT_FONT = data.FontDictionary[value];
-                    STANDARD_TEXT_FONT = data.FontDictionary[value];
-                    NAMEPLATE_SPELLCAST_FONT = data.FontDictionary[value];
-                    UNIT_NAME_FONT = data.FontDictionary[value];
-                    CombatTextFont = data.FontDictionary[value];
+                    PotentialSpoonAddon:SetupFont(value);
                 end,
                 get = function(_)
                     return PotentialSpoonAddon.db.global.damage_font;
@@ -44,10 +47,5 @@ function PotentialSpoonAddon:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New(data.DatabaseName, data.DefaultOptions, true);
     AceConfigRegistry:RegisterOptionsTable(data.MetaData.Name, PotentialSpoonAddon.GetOptions);
     data.Dialog = AceConfigDialog:AddToBlizOptions(data.MetaData.Name, data.MetaData.Name);
-    -- setting the damage text font from the options configured
-    DAMAGE_TEXT_FONT = data.FontDictionary[self.db.global.damage_font];
-    STANDARD_TEXT_FONT = data.FontDictionary[self.db.global.damage_font];
-    NAMEPLATE_SPELLCAST_FONT = data.FontDictionary[self.db.global.damage_font];
-    UNIT_NAME_FONT = data.FontDictionary[self.db.global.damage_font];
-    CombatTextFont = data.FontDictionary[self.db.global.damage_font];
+    self.SetupFont(self.db.global.damage_font);
 end

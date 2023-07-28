@@ -8,6 +8,8 @@
 ## X-Category: Combat
 ## X-License: MIT
 ## X-Curse-Project-ID: 893760
+## RequiredDeps: Blizzard_CombatText
+## LoadWith: Blizzard_CombatText
 
 embeds.xml
 variables.lua
