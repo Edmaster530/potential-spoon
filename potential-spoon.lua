@@ -1,14 +1,7 @@
 local _,data=...;  -- Addon Folder Name, AddonTable Data Object
-PotentialSpoonAddon = LibStub("AceAddon-3.0"):NewAddon(data.Directory);
+PotentialSpoonAddon = LibStub("AceAddon-3.0"):NewAddon(data.MetaData.Name, "AceConsole-3.0");
 local AceConfigRegistry = LibStub("AceConfigRegistry-3.0");
 local AceConfigDialog = LibStub("AceConfigDialog-3.0");
-
-function PotentialSpoonAddon:SetupFont(value)
-    -- setting the damage text font from the options configured
-    DAMAGE_TEXT_FONT = data.FontDictionary[PotentialSpoonAddon.db.global.damage_font];
-    CombatTextFont:SetFont(DAMAGE_TEXT_FONT, COMBAT_TEXT_HEIGHT, "OUTLINE");
-    -- message("Game CLIENT Restart required in order for Font Changes to take affect!");
-end
 
 --[[
     UI Types are "cmd" "dropdown" "dialog" (ignored)
@@ -24,17 +17,45 @@ function PotentialSpoonAddon:GetOptions(_, _, name)
         name = data.MetaData.Name .. " (" .. data.MetaData.Version .. ")",
         args = {
             damage_font = {
+                order = 1,
                 type = "select",
                 style = "dropdown",
-                name = "Font",
+                name = "Combat Text Font",
                 values = data.FontLookup,
                 set = function(_, value)
+                    if PotentialSpoonAddon.db.global.damage_font == value then return end
+                    DAMAGE_TEXT_FONT = data.FontDictionary[value];
                     PotentialSpoonAddon.db.global.damage_font = value;
-                    PotentialSpoonAddon:SetupFont(value);
+                    PotentialSpoonAddon:Print("Restart Client for changes to take affect!");
                 end,
                 get = function(_)
                     return PotentialSpoonAddon.db.global.damage_font;
                 end
+            },
+            desc0 = {
+                order = 2,
+                type = "description",
+                name = "Combat Text Font (outside of self)"
+            },
+            self_font = {
+                order = 3,
+                type = "select",
+                style = "dropdown",
+                name = "Personal Combat Font",
+                values = data.FontLookup,
+                set = function(_, value)
+                    if PotentialSpoonAddon.db.global.self_font == value then return end
+                    CombatTextFont:SetFont(data.FontDictionary[value], COMBAT_TEXT_HEIGHT, "OUTLINE");
+                    PotentialSpoonAddon.db.global.self_font = value;
+                end,
+                get = function(_)
+                    return PotentialSpoonAddon.db.global.self_font;
+                end
+            },
+            desc1 = {
+                order = 4,
+                type = "description",
+                name = "Combat Text Font for Self"
             },
         },
     };
@@ -47,5 +68,6 @@ function PotentialSpoonAddon:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New(data.DatabaseName, data.DefaultOptions, true);
     AceConfigRegistry:RegisterOptionsTable(data.MetaData.Name, PotentialSpoonAddon.GetOptions);
     data.Dialog = AceConfigDialog:AddToBlizOptions(data.MetaData.Name, data.MetaData.Name);
-    self.SetupFont(self.db.global.damage_font);
+    CombatTextFont:SetFont(data.FontDictionary[self.db.global.self_font], COMBAT_TEXT_HEIGHT, "OUTLINE");
+    DAMAGE_TEXT_FONT = data.FontDictionary[self.db.global.damage_font];
 end

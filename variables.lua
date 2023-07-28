@@ -13,6 +13,7 @@ data.DefaultOptions = {
     profile = {},
     global = {
         damage_font = 1,
+        self_font = 1
     },
 };
 
