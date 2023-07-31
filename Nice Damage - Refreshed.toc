@@ -1,0 +1,16 @@
+## Interface: 
+## Version: 1.0.1
+## Title: Nice Damage - Refreshed
+## Author: Edman
+## Notes: Manages your Combat Text
+## DefaultState: Enabled
+## SavedVariables: NDRDB
+## X-Category: Combat
+## X-License: MIT
+## X-Curse-Project-ID: 893760
+## RequiredDeps: Blizzard_CombatText
+## LoadWith: Blizzard_CombatText
+
+embeds.xml
+variables.lua
+Nice Damage - Refreshed.lua
