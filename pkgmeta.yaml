@@ -7,6 +7,7 @@ externals:
 
 ignore:
   - README.md
+  - Libs
 
 enable-nolib-creation: no
 manual-changelog: CHANGELOG.txt
