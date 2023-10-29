@@ -36,6 +36,11 @@ function PotentialSpoonAddon:GetOptions(_, _, name)
                 order = 2,
                 type = "description",
                 name = "Combat Text Font (outside of self)"
+                    .."\n"
+                    .."\n"
+                    .."Make sure to restart your client after selecting a preferred Combat Text font!"
+                    .."\n"
+                    .."Blizzard requires a client restart after setting the global Damage Font property."
             },
             self_font = {
                 order = 3,
