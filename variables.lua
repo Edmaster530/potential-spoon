@@ -1,8 +1,8 @@
 local _,data=...;
 
 -- Addon Constants --
-data.Directory = "potential-spoon";
-data.DatabaseName = "PotentialSpoonDB";
+data.Directory = "Nice Damage - Refreshed";
+data.DatabaseName = "NDRDB";
 data.MetaData = {
     Name = GetAddOnMetadata(..., "Title"),
     Version = GetAddOnMetadata(..., "Version"),
@@ -13,7 +13,9 @@ data.DefaultOptions = {
     profile = {},
     global = {
         damage_font = 1,
-        self_font = 1
+        self_font = 1,
+        font_size = COMBAT_TEXT_HEIGHT,
+        default_size = 16
     },
 };
 
