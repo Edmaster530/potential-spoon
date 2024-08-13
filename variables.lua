@@ -4,9 +4,9 @@ local _,data=...;
 data.Directory = "Nice Damage - Refreshed";
 data.DatabaseName = "NDRDB";
 data.MetaData = {
-    Name = GetAddOnMetadata(..., "Title"),
-    Version = GetAddOnMetadata(..., "Version"),
-    Notes = GetAddOnMetadata(..., "Notes"),
+    Name = C_AddOns.GetAddOnMetadata(..., "Title"),
+    Version = C_AddOns.GetAddOnMetadata(..., "Version"),
+    Notes = C_AddOns.GetAddOnMetadata(..., "Notes"),
 };
 
 data.DefaultOptions = {
