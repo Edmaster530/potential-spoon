@@ -1,5 +1,5 @@
 ## Interface: 
-## Version: 1.1.3
+## Version: 1.1.4
 ## Title: Nice Damage - Refreshed
 ## Author: Edman
 ## Notes: Manages your Combat Text
