@@ -1,1 +1,2 @@
-
+-- Version 1.1.4
+Added support for version 11.1.0
