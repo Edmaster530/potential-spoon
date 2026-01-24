@@ -2,24 +2,6 @@ local _,data=...;
 
 -- Addon Constants --
 data.Directory = "Nice Damage - Refreshed";
-data.DatabaseName = "NDRDB";
-data.MetaData = {
-    Name = C_AddOns.GetAddOnMetadata(..., "Title"),
-    Version = C_AddOns.GetAddOnMetadata(..., "Version"),
-    Notes = C_AddOns.GetAddOnMetadata(..., "Notes"),
-};
-
-data.DefaultOptions = {
-    profile = {},
-    global = {
-        damage_font = 1,
-        self_font = 1,
-        font_size = COMBAT_TEXT_HEIGHT,
-        default_size = 16
-    },
-};
-
-data.Dialog = {};
 data.FontDictionary = {};
 data.FontDictionary[1] = "Interface\\Addons\\" .. data.Directory .. "\\Fonts\\af-pepsi.ttf";
 data.FontDictionary[2] = "Interface\\Addons\\" .. data.Directory .. "\\Fonts\\basket-of-hammers.ttf";
