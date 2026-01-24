@@ -1,132 +1,95 @@
-local _,data=...;  -- Addon Folder Name, AddonTable Data Object
-PotentialSpoonAddon = LibStub("AceAddon-3.0"):NewAddon(data.MetaData.Name, "AceConsole-3.0");
-local AceConfigRegistry = LibStub("AceConfigRegistry-3.0");
-local AceConfigDialog = LibStub("AceConfigDialog-3.0");
-
+local _,data=...;
+NDR = {};
+NDR.Category = Settings.RegisterVerticalLayoutCategory("NDR");
 
 --[[
-    UI Types are "cmd" "dropdown" "dialog" (ignored)
-    UI Name field is expected to contain the full name of the calling addon, including version (ignored)
-    App Name field is the options table name as given at registration time
-    <see href="https://www.wowace.com/projects/ace3/pages/api/ace-config-registry-3-0" />
-
-    App Name options are stuck to one type, we don't have multiples
+    Sets up the configuration values
 ]]
-function PotentialSpoonAddon:GetOptions(_, _, name)
-    return {
-        type = "group",
-        name = data.MetaData.Name .. " (" .. data.MetaData.Version .. ")",
-        args = {
-            damage_font = {
-                order = 1,
-                type = "select",
-                style = "dropdown",
-                name = "Combat Text Font",
-                values = data.FontLookup,
-                set = function(_, value)
-                    PotentialSpoonAddon.db.global.damage_font = value;
-                end,
-                get = function(_)
-                    return PotentialSpoonAddon.db.global.damage_font;
-                end
-            },
-            desc0 = {
-                order = 2,
-                type = "description",
-                name = "Combat Text Font (outside of self)"
-                    .."\n"
-                    .."\n"
-                    .."Make sure to restart your client after selecting a preferred Combat Text font!"
-                    .."\n"
-                    .."Blizzard requires a client restart after setting the global Damage Font property."
-            },
-            self_font = {
-                order = 3,
-                type = "select",
-                style = "dropdown",
-                name = "Personal Combat Font",
-                values = data.FontLookup,
-                set = function(_, value)
-                    PotentialSpoonAddon.db.global.self_font = value;
-                end,
-                get = function(_)
-                    return PotentialSpoonAddon.db.global.self_font;
-                end
-            },
-            desc1 = {
-                order = 4,
-                type = "description",
-                name = "Combat Text Font for Self"
-                    .."\n"
-                    .."Self-Font is the only font that is height adjustable."
-                    .."\n"
-                    .."\n"
-            },
-            font_size = {
-                order = 5,
-                name = "Personal Combat Font Size",
-                type = "range",
-                min = 1,
-                step = 1,
-                max = 100,
-                get = function(_)
-                    return PotentialSpoonAddon.db.global.font_size;
-                end,
-                set = function(_, value)
-                    PotentialSpoonAddon.db.global.font_size = value;
-                end
-            },
-            revert = {
-                order = 5,
-                type = "execute",
-                name = "Reset",
-                func = function()
-                    PotentialSpoonAddon.db.global.font_size = PotentialSpoonAddon.db.global.default_size;
-                end
-            },
-            desc2 = {
-                order = 6,
-                type = "description",
-                name = "\n"
-                    .."\n"
-            },
-            apply = {
-                order = -1,
-                type = "execute",
-                name = "Save Changes",
-                func = function()
-                    local original = DAMAGE_TEXT_FONT;
-                    if original ~= data.FontDictionary[PotentialSpoonAddon.db.global.damage_font] then
-                        StaticPopup_Show("ND_CONFIRM");
-                    end
-                    CombatTextFont:SetFont(data.FontDictionary[PotentialSpoonAddon.db.global.self_font], PotentialSpoonAddon.db.global.font_size, "OUTLINE");
-                    DAMAGE_TEXT_FONT = data.FontDictionary[PotentialSpoonAddon.db.global.damage_font];
-                    -- StaticPopup_Show("ND_CONFIRM");
-                end
-            }
-        },
-    };
+function NDR:ConfigureOptions()
+    -- Font Selection --
+    local name = "Font Selection";
+    local tooltip = "Please remember to logout and back in for combat text!";
+    local variable = "NDR_FONT";
+    local defaultValue = NDR_FONT;
+
+    local setting = Settings.RegisterProxySetting(NDR.Category, variable,
+        Settings.VarType.Number, name, defaultValue, function()
+            return NDR_FONT;
+        end, function(value)
+            NDR_FONT = value;
+            NDR:SetFont();
+        end);
+    setting:SetValueChangedCallback(function(setting, value) NDR:OnSettingChanged(setting, value); end);
+
+    local function GetOptions()
+        local container = Settings.CreateControlTextContainer();
+        for key,value in pairs(data.FontDictionary) do
+            container:Add(key, data.FontLookup[key]);
+        end
+        return container:GetData();
+    end
+
+    Settings.CreateDropdown(NDR.Category, setting, GetOptions, tooltip);
+    -- End Font Selection --
+
+    -- Font Size --
+    local min = 0.5;
+    local max = 5;
+    name = "Font Size";
+    variable = "NDR_FONT_SIZE";
+    defaultValue = NDR_FONT_SIZE;
+
+    setting = Settings.RegisterProxySetting(NDR.category, variable,
+        Settings.VarType.Number, name, defaultValue, function()
+            return NDR_FONT_SIZE;
+        end, function(value)
+            NDR_FONT_SIZE = value;
+            NDR:SetFont();
+        end);
+    setting:SetValueChangedCallback(function(setting, value) NDR:OnSettingChanged(setting, value); end);
+    local options = Settings.CreateSliderOptions(min, max, 0.25);
+    options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right);
+    Settings.CreateSlider(NDR.Category, setting, options, "This is still a work in progress, it applies to the Scale of the Text");
+    -- End Font Size --
 end
 
---[[
-    AceAddon Initialization Logic
-]]
-function PotentialSpoonAddon:OnInitialize()
-    -- set up a static confirmation dialog box
-    StaticPopupDialogs["ND_CONFIRM"] = {
-        text = "Please make sure to restart your client for changes to take affect!",
-        button1 = "Understood",
-        OnAccept = function()
-            PotentialSpoonAddon:Print("Restart Client for changes to take affect!");
-        end,
-        timeout = 0,
-        whileDead = false,
-        hideOnEscape = true
-    };
-
-    self.db = LibStub("AceDB-3.0"):New(data.DatabaseName, data.DefaultOptions, true);
-    AceConfigRegistry:RegisterOptionsTable(data.MetaData.Name, PotentialSpoonAddon.GetOptions);
-    data.Dialog = AceConfigDialog:AddToBlizOptions(data.MetaData.Name, data.MetaData.Name);
-    CombatTextFont:SetFont(data.FontDictionary[self.db.global.self_font], PotentialSpoonAddon.db.global.font_size, "OUTLINE");
-    DAMAGE_TEXT_FONT = data.FontDictionary[self.db.global.damage_font];
+function NDR:OnSettingChanged(setting, value)
+    -- this callback will be invoked whenever a setting is modified
+    -- TODO - maybe add prompt to end user
+    print("Make sure to logout and back in for the combat text to change!");
+    if setting:GetVariable() == "NDR_FONT" then
+        NDR_FONT = value;
+    else
+        NDR_FONT_SIZE = value;
+    end
 end
+
+function NDR:Initialize()
+    local frame = CreateFrame("Frame");
+    frame:RegisterEvent("ADDON_LOADED");
+    frame:SetScript("OnEvent", function(self, event, arg1)
+        if event ~= "ADDON_LOADED" or arg1 ~= "Nice Damage - Refreshed" then
+            return;
+        end
+
+        if NDR_FONT == nil then
+            NDR_FONT = 1;
+        end
+        if NDR_FONT_SIZE == nil then
+            NDR_FONT_SIZE = 16;
+        end
+
+        NDR:SetFont();
+        NDR:ConfigureOptions();
+        Settings.RegisterAddOnCategory(NDR.Category);
+    end);
+end
+
+function NDR:SetFont()
+    print("Setting Font", data.FontLookup[NDR_FONT], "Setting Size", NDR_FONT_SIZE);
+    CombatTextFont:SetFont(data.FontDictionary[NDR_FONT], 16, "OUTLINE");
+     CombatText:SetScale(NDR_FONT_SIZE);
+    DAMAGE_TEXT_FONT = data.FontDictionary[NDR_FONT];
+end
+
+NDR:Initialize();
