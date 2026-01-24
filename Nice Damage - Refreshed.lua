@@ -1,6 +1,6 @@
 local _,data=...;
 NDR = {};
-NDR.Category = Settings.RegisterVerticalLayoutCategory("NDR");
+NDR.Category = Settings.RegisterVerticalLayoutCategory("Nice Damage - Refreshed");
 
 --[[
     Sets up the configuration values
@@ -56,7 +56,6 @@ end
 function NDR:OnSettingChanged(setting, value)
     -- this callback will be invoked whenever a setting is modified
     -- TODO - maybe add prompt to end user
-    print("Make sure to logout and back in for the combat text to change!");
     if setting:GetVariable() == "NDR_FONT" then
         NDR_FONT = value;
     else
@@ -86,7 +85,6 @@ function NDR:Initialize()
 end
 
 function NDR:SetFont()
-    print("Setting Font", data.FontLookup[NDR_FONT], "Setting Size", NDR_FONT_SIZE);
     CombatTextFont:SetFont(data.FontDictionary[NDR_FONT], 16, "OUTLINE");
      CombatText:SetScale(NDR_FONT_SIZE);
     DAMAGE_TEXT_FONT = data.FontDictionary[NDR_FONT];
