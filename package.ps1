@@ -17,7 +17,6 @@ $VARIABLES = ".\variables.lua"
 $EMBEDS = ".\embeds.xml"
 $LICENSE = ".\LICENSE"
 $FONTS_DIR = ".\Fonts\"
-$LIBS_DIR = ".\Libs\"
 
 $NDR = "Nice Damage - Refreshed"
 
@@ -38,7 +37,6 @@ Copy-Item $EMBEDS -Destination ".\$NDR"
 Copy-Item $VARIABLES -Destination ".\$NDR"
 Copy-Item $LICENSE -Destination ".\$NDR"
 Copy-Item $FONTS_DIR -Destination ".\$NDR" -Recurse
-Copy-Item $LIBS_DIR -Destination ".\$NDR" -Recurse
 
 Compress-Archive -Path $NDR -DestinationPath $destination
 # now we remove the folder
